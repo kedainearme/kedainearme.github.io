@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram } from 'lucide-react';
 import { Home } from './Home';
 import { CategoryPage } from './CategoryPage';
+import { ContactPage } from './ContactPage';
 import { BLOG_POSTS } from './constants';
 
 // Layout Component
@@ -32,6 +33,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link to="/" className="text-sm font-medium text-gray-600 hover:text-blue-600">Utama</Link>
             <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-blue-600">Tentang Kami</Link>
             <Link to="/blog" className="text-sm font-medium text-gray-600 hover:text-blue-600">Blog</Link>
+            <Link to="/contact" className="text-sm font-medium text-gray-600 hover:text-blue-600">Hubungi</Link>
           </nav>
 
           <div className="hidden md:block">
@@ -60,6 +62,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link to="/" className="text-lg font-medium text-gray-900">Utama</Link>
             <Link to="/about" className="text-lg font-medium text-gray-900">Tentang Kami</Link>
             <Link to="/blog" className="text-lg font-medium text-gray-900">Blog</Link>
+            <Link to="/contact" className="text-lg font-medium text-gray-900">Hubungi Kami</Link>
             <a 
               href="https://www.google.com/maps" 
               target="_blank" 
@@ -214,6 +217,7 @@ export default function App() {
           <Route path="/:categoryId" element={<CategoryPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<LegalPage title="Dasar Privasi" content="Privasi anda adalah penting bagi kami. Dasar ini menerangkan cara kami mengumpul dan menggunakan data anda..." />} />
           <Route path="/terms" element={<LegalPage title="Syarat Perkhidmatan" content="Dengan menggunakan NearMe, anda bersetuju dengan syarat berikut..." />} />
           <Route path="/disclaimer" element={<LegalPage title="Penafian" content="NearMe ialah alat carian bebas. Kami tidak bergabung dengan, disokong oleh, atau disambungkan kepada Google LLC atau Google Maps. Semua hasil carian disediakan untuk tujuan maklumat sahaja." />} />
