@@ -47,10 +47,10 @@ export const Home = () => {
       {/* Hero Section */}
       <section className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-          Find Stores Near You in Seconds
+          Cari Kedai Berdekatan Anda Dalam Beberapa Saat
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-          Search nearby businesses and get directions instantly.
+          Cari perniagaan berdekatan dan dapatkan arah dengan pantas.
         </p>
 
         {/* Search Bar */}
@@ -59,7 +59,7 @@ export const Home = () => {
             <Search className="absolute left-4 text-gray-400 h-5 w-5" />
             <input
               type="text"
-              placeholder="Search for a store or category..."
+              placeholder="Cari kedai atau kategori..."
               className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent google-shadow"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -68,7 +68,7 @@ export const Home = () => {
               type="submit"
               className="absolute right-2 bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors"
             >
-              Search
+              Cari
             </button>
           </div>
         </form>
@@ -94,7 +94,7 @@ export const Home = () => {
       <section className="mb-16">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
           <Navigation className="h-6 w-6 text-blue-600" />
-          Popular Searches Near You
+          Carian Popular Berdekatan Anda
         </h2>
         <div className="flex flex-wrap gap-3">
           {POPULAR_SEARCHES.map((search) => (
@@ -116,7 +116,7 @@ export const Home = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <MapPin className="h-6 w-6 text-blue-600" />
-            {detectedCity ? `Browse in ${detectedCity}` : 'Browse Nearby Areas'}
+            {detectedCity ? `Lihat di ${detectedCity}` : 'Lihat Kawasan Berdekatan'}
           </h2>
           <button 
             onClick={detectLocation}
@@ -128,7 +128,7 @@ export const Home = () => {
             ) : (
               <Locate className="h-4 w-4" />
             )}
-            {detectedCity ? 'Update Location' : 'Detect My City'}
+            {detectedCity ? 'Kemas Kini Lokasi' : 'Kesan Bandar Saya'}
           </button>
         </div>
 
@@ -199,14 +199,14 @@ export const Home = () => {
 
       {/* Blog Teaser */}
       <section className="mb-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest from our Blog</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Terbaru dari Blog Kami</h2>
         <div className="grid md:grid-cols-3 gap-6">
           {BLOG_POSTS.map((post) => (
             <div key={post.id} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
               <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">{post.date}</span>
               <h3 className="text-lg font-bold mt-2 mb-3 leading-tight">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-4">{post.excerpt}</p>
-              <Link to="/blog" className="text-sm font-bold text-gray-900 hover:text-blue-600">Read More →</Link>
+              <Link to="/blog" className="text-sm font-bold text-gray-900 hover:text-blue-600">Baca Lagi →</Link>
             </div>
           ))}
         </div>

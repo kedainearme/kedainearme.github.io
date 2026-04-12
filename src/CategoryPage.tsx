@@ -73,13 +73,13 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
     <div className="mt-6 border-t border-gray-100 pt-6">
       <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
         <MessageSquare className="h-4 w-4 text-blue-600" />
-        Community Reviews
+        Ulasan Komuniti
       </h4>
 
       {/* Review List */}
       <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
         {reviews.length === 0 ? (
-          <p className="text-sm text-gray-500 italic">No reviews yet. Be the first to review!</p>
+          <p className="text-sm text-gray-500 italic">Belum ada ulasan. Jadilah yang pertama memberi ulasan!</p>
         ) : (
           reviews.map((review) => (
             <div key={review.id} className="bg-gray-50 p-3 rounded-lg">
@@ -108,7 +108,7 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
       {/* Add Review Form */}
       <form onSubmit={handleSubmitReview} className="relative">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-bold text-gray-500">Your Rating:</span>
+          <span className="text-xs font-bold text-gray-500">Rating Anda:</span>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -126,7 +126,7 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
           <textarea
             value={newReview}
             onChange={(e) => setNewReview(e.target.value)}
-            placeholder={user ? "Write a review..." : "Sign in to write a review"}
+            placeholder={user ? "Tulis ulasan..." : "Log masuk untuk menulis ulasan"}
             className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             rows={2}
           />
@@ -140,7 +140,7 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
         </div>
         {!user && (
           <p className="text-[10px] text-gray-400 mt-1">
-            Clicking send will prompt you to sign in with Google.
+            Klik hantar akan meminta anda log masuk dengan Google.
           </p>
         )}
       </form>
@@ -312,16 +312,16 @@ export const CategoryPage = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link to="/" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 mb-6">
         <ArrowLeft className="h-4 w-4 mr-1" />
-        Back to Search
+        Kembali ke Carian
       </Link>
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Best {category.name} Near Me in your placed
+          {category.name} Terbaik Berdekatan Anda
         </h1>
         <p className="text-gray-600 leading-relaxed">
-          Looking for the closest {category.name.toLowerCase()}? We've compiled a list of the top-rated locations near you. 
-          Click the button below to see the full list with real-time traffic and opening hours on Google Maps.
+          Mencari {category.name.toLowerCase()} yang terdekat? Kami telah menyusun senarai lokasi dengan rating tertinggi berdekatan anda. 
+          Klik butang di bawah untuk melihat senarai penuh dengan trafik masa nyata dan waktu operasi di Google Maps.
         </p>
       </div>
 
@@ -333,13 +333,13 @@ export const CategoryPage = () => {
           className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
         >
           <MapPin className="h-5 w-5 mr-2" />
-          View All on Google Maps
+          Lihat Semua di Google Maps
         </a>
       </div>
 
       <div className="grid gap-4 mb-12">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl font-bold text-gray-900">Featured {category.name} Nearby</h2>
+          <h2 className="text-xl font-bold text-gray-900">{category.name} Pilihan Berdekatan</h2>
           <button 
             onClick={() => setShowOnlyOpen(!showOnlyOpen)}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
@@ -349,7 +349,7 @@ export const CategoryPage = () => {
             }`}
           >
             <Clock className="h-4 w-4" />
-            Open Now
+            Buka Sekarang
           </button>
         </div>
 
@@ -436,13 +436,13 @@ export const CategoryPage = () => {
             </div>
           )}
           {!isLoading && showOnlyOpen && filteredStores.length === 0 && hasMore && (
-            <p className="text-gray-500 text-sm">No open locations found in this batch. Scrolling for more...</p>
+            <p className="text-gray-500 text-sm">Tiada lokasi yang dibuka ditemui dalam kumpulan ini. Tatal untuk lebih lanjut...</p>
           )}
           {!hasMore && (
             <p className="text-gray-400 text-sm italic">
               {filteredStores.length === 0 && showOnlyOpen 
-                ? "No open locations found nearby." 
-                : "You've reached the end of the list."}
+                ? "Tiada lokasi yang dibuka ditemui berdekatan." 
+                : "Anda telah sampai ke penghujung senarai."}
             </p>
           )}
         </div>
@@ -450,17 +450,17 @@ export const CategoryPage = () => {
 
       {/* SEO Content Section */}
       <section className="prose prose-blue max-w-none text-gray-600 border-t border-gray-100 pt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">How to find the best {category.name.toLowerCase()} near you</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Bagaimana untuk mencari {category.name.toLowerCase()} terbaik berdekatan anda</h2>
         <p className="mb-4">
-          Finding a reliable {category.name.toLowerCase()} doesn't have to be complicated. By using our integrated search tool, 
-          you can instantly access Google Maps data which includes user reviews, photos, and current wait times.
+          Mencari {category.name.toLowerCase()} yang boleh dipercayai tidak semestinya rumit. Dengan menggunakan alat carian bersepadu kami, 
+          anda boleh mengakses data Google Maps secara instan yang merangkumi ulasan pengguna, foto, dan masa menunggu semasa.
         </p>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">What to look for:</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Apa yang perlu diperhatikan:</h3>
         <ul className="list-disc pl-5 mb-6 space-y-2">
-          <li><strong>High Ratings:</strong> Look for locations with 4.0 stars or higher.</li>
-          <li><strong>Recent Reviews:</strong> Check if people have visited in the last week.</li>
-          <li><strong>Distance:</strong> Sort by proximity to save time and fuel.</li>
-          <li><strong>Operating Hours:</strong> Ensure they are open before you head out.</li>
+          <li><strong>Rating Tinggi:</strong> Cari lokasi dengan 4.0 bintang atau lebih tinggi.</li>
+          <li><strong>Ulasan Terbaru:</strong> Semak jika orang telah melawat dalam minggu lepas.</li>
+          <li><strong>Jarak:</strong> Isih mengikut kedekatan untuk menjimatkan masa dan bahan bakar.</li>
+          <li><strong>Waktu Operasi:</strong> Pastikan mereka dibuka sebelum anda keluar.</li>
         </ul>
       </section>
     </div>

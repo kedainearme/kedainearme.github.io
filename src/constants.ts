@@ -57,37 +57,37 @@ export const CATEGORIES = [
 ];
 
 export const POPULAR_SEARCHES = [
-  "Walmart near me",
-  "CVS pharmacy near me",
-  "Starbucks near me",
-  "McDonald's near me",
-  "Costco near me",
-  "Walgreens near me",
-  "Target near me",
-  "Shell gas station near me"
+  "Lotus's near me",
+  "Guardian pharmacy near me",
+  "ZUS Coffee near me",
+  "KFC near me",
+  "FamilyMart near me",
+  "Watsons near me",
+  "7-Eleven near me",
+  "Petronas near me"
 ];
 
 export const CITIES = [
-  "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego"
+  "Kuala Lumpur", "Petaling Jaya", "Johor Bahru", "Penang", "Ipoh", "Melaka", "Kota Kinabalu", "Kuching"
 ];
 
 export const BLOG_POSTS = [
   {
     id: 1,
-    title: "How to Find the Closest Gas Station Fast",
-    excerpt: "Running low on fuel? Here are the quickest ways to find a gas station using your mobile device.",
-    date: "Oct 12, 2023"
+    title: "Kedai Elektrik Wangsa Maju Dekat Anda Paling Lengkap",
+    excerpt: "Mencari peralatan elektrik di Wangsa Maju? Berikut adalah senarai kedai elektrik paling lengkap dan dipercayai untuk keperluan rumah anda.",
+    date: "Apr 10, 2024"
   },
   {
     id: 2,
-    title: "Best Ways to Use Google Maps for Local Search",
-    excerpt: "Master the art of local search with these hidden Google Maps features you probably didn't know about.",
-    date: "Nov 05, 2023"
+    title: "Kedai Tayar 24 Jam Terbaik di Cheras Kuala Lumpur",
+    excerpt: "Kecemasan tayar pancit di tengah malam? Jangan risau, ini adalah senarai kedai tayar 24 jam terbaik di sekitar Cheras dan KL.",
+    date: "Apr 08, 2024"
   },
   {
     id: 3,
-    title: "Top Apps for Finding Stores Near You",
-    excerpt: "Beyond Google Maps, these apps help you find the best deals and closest locations for your daily needs.",
-    date: "Dec 20, 2023"
+    title: "10 Kedai Perabot Kluang Paling Disyorkan & Murah",
+    excerpt: "Ingin menghias rumah dengan bajet terhad? Semak 10 kedai perabot di Kluang yang menawarkan harga murah dan kualiti terbaik.",
+    date: "Apr 05, 2024"
   }
 ];
