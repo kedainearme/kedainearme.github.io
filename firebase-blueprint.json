@@ -1,0 +1,47 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "A user review for a specific store.",
+      "type": "object",
+      "properties": {
+        "storeId": {
+          "type": "string",
+          "description": "The unique identifier for the store (e.g., store name or ID)."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who wrote the review."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the user."
+        },
+        "userPhoto": {
+          "type": "string",
+          "description": "The photo URL of the user."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The star rating (1-5)."
+        },
+        "comment": {
+          "type": "string",
+          "description": "The text content of the review."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the review was created."
+        }
+      },
+      "required": ["storeId", "userId", "userName", "rating", "comment", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of store reviews."
+    }
+  }
+}

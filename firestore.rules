@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: reviews
+    // Document ID: auto-generated
+    // Fields:
+    //   - storeId: string (required) - The ID of the store being reviewed
+    //   - userId: string (required) - The UID of the reviewer
+    //   - userName: string (required) - Display name of the reviewer
+    //   - userPhoto: string (optional) - Photo URL of the reviewer
+    //   - rating: number (required, 1-5) - Star rating
+    //   - comment: string (required, max 1000 chars) - Review text
+    //   - createdAt: timestamp (required) - Creation time
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidRating(rating) {
+      return rating is number && rating >= 1 && rating <= 5;
+    }
+
+    function isValidComment(comment) {
+      return comment is string && comment.size() > 0 && comment.size() <= 1000;
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['storeId', 'userId', 'userName', 'rating', 'comment', 'createdAt']) &&
+             data.storeId is string &&
+             data.userId == request.auth.uid &&
+             data.userName is string && data.userName.size() <= 100 &&
+             isValidRating(data.rating) &&
+             isValidComment(data.comment) &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /reviews/{reviewId} {
+      // Anyone can read reviews
+      allow read: if true;
+
+      // Authenticated users can create reviews for themselves
+      allow create: if isAuthenticated() && isValidReview(request.resource.data);
+
+      // Users can only update or delete their own reviews
+      // For updates, we validate the new data as well
+      allow update: if isOwner(resource.data.userId) && 
+                       isValidReview(request.resource.data) &&
+                       request.resource.data.storeId == resource.data.storeId &&
+                       request.resource.data.createdAt == resource.data.createdAt;
+      
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

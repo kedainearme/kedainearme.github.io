@@ -1,7 +1,152 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe } from 'lucide-react';
+import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send } from 'lucide-react';
 import { CATEGORIES } from './constants';
+import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+
+const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: string }) => {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [newReview, setNewReview] = useState('');
+  const [rating, setRating] = useState(5);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    const q = query(
+      collection(db, 'reviews'),
+      where('storeId', '==', storeId),
+      orderBy('createdAt', 'desc')
+    );
+
+    const unsubscribeReviews = onSnapshot(q, (snapshot) => {
+      const reviewsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setReviews(reviewsData);
+    }, (error) => {
+      console.error("Error fetching reviews:", error);
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeReviews();
+    };
+  }, [storeId]);
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) {
+      await signInWithGoogle();
+      return;
+    }
+
+    if (!newReview.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'reviews'), {
+        storeId,
+        userId: user.uid,
+        userName: user.displayName,
+        userPhoto: user.photoURL,
+        rating,
+        comment: newReview,
+        createdAt: serverTimestamp()
+      });
+      setNewReview('');
+      setRating(5);
+    } catch (error) {
+      console.error("Error adding review:", error);
+      alert("Failed to add review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="mt-6 border-t border-gray-100 pt-6">
+      <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <MessageSquare className="h-4 w-4 text-blue-600" />
+        Community Reviews
+      </h4>
+
+      {/* Review List */}
+      <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+        {reviews.length === 0 ? (
+          <p className="text-sm text-gray-500 italic">No reviews yet. Be the first to review!</p>
+        ) : (
+          reviews.map((review) => (
+            <div key={review.id} className="bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  {review.userPhoto ? (
+                    <img src={review.userPhoto} alt={review.userName} className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
+                      <User className="h-3 w-3 text-gray-400" />
+                    </div>
+                  )}
+                  <span className="text-xs font-bold text-gray-700">{review.userName}</span>
+                </div>
+                <div className="flex items-center text-amber-500">
+                  <Star className="h-3 w-3 fill-current" />
+                  <span className="text-xs font-bold ml-1">{review.rating}</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{review.comment}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Add Review Form */}
+      <form onSubmit={handleSubmitReview} className="relative">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-xs font-bold text-gray-500">Your Rating:</span>
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className={`transition-colors ${star <= rating ? 'text-amber-500' : 'text-gray-300'}`}
+              >
+                <Star className={`h-4 w-4 ${star <= rating ? 'fill-current' : ''}`} />
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="relative">
+          <textarea
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+            placeholder={user ? "Write a review..." : "Sign in to write a review"}
+            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            rows={2}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="absolute right-2 bottom-2 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          </button>
+        </div>
+        {!user && (
+          <p className="text-[10px] text-gray-400 mt-1">
+            Clicking send will prompt you to sign in with Google.
+          </p>
+        )}
+      </form>
+    </div>
+  );
+};
 
 export const CategoryPage = () => {
   const { categoryId } = useParams();
@@ -13,6 +158,7 @@ export const CategoryPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [showOnlyOpen, setShowOnlyOpen] = useState(false);
   const [copiedStoreId, setCopiedStoreId] = useState<number | null>(null);
+  const [activeReviewStore, setActiveReviewStore] = useState<string | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   const STORES_PER_PAGE = 4;
@@ -234,6 +380,17 @@ export const CategoryPage = () => {
             </div>
             <div className="flex gap-2">
               <button 
+                onClick={() => setActiveReviewStore(activeReviewStore === store.name ? null : store.name)}
+                className={`p-2 rounded-lg transition-all border flex items-center gap-2 ${
+                  activeReviewStore === store.name 
+                  ? 'bg-blue-600 text-white border-blue-600' 
+                  : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-100'
+                }`}
+                title="View reviews"
+              >
+                <MessageSquare className="h-5 w-5" />
+              </button>
+              <button 
                 onClick={() => handleShare(store.id, store.name)}
                 className={`p-2 rounded-lg transition-all border flex items-center gap-2 ${
                   copiedStoreId === store.id 
@@ -262,6 +419,11 @@ export const CategoryPage = () => {
                 Order Now
               </a>
             </div>
+            {activeReviewStore === store.name && (
+              <div className="w-full animate-in fade-in zoom-in-95 duration-300">
+                <ReviewSection storeId={store.name} storeName={store.name} />
+              </div>
+            )}
           </div>
         ))}
 
