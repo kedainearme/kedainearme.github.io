@@ -206,7 +206,14 @@ export const Home = () => {
               <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">{post.date}</span>
               <h3 className="text-lg font-bold mt-2 mb-3 leading-tight">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-4">{post.excerpt}</p>
-              <Link to="/blog" className="text-sm font-bold text-gray-900 hover:text-blue-600">Baca Lagi →</Link>
+              <a 
+                href={post.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-sm font-bold text-gray-900 hover:text-blue-600 flex items-center gap-1"
+              >
+                Baca Lagi →
+              </a>
             </div>
           ))}
         </div>

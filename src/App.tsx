@@ -158,7 +158,14 @@ const Blog = () => (
             <p className="text-gray-600 mb-4">
               {post.excerpt}
             </p>
-            <button className="font-bold text-gray-900 border-b-2 border-blue-600 pb-1">Baca Artikel</button>
+            <a 
+              href={post.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="font-bold text-gray-900 border-b-2 border-blue-600 pb-1"
+            >
+              Baca Artikel
+            </a>
           </div>
         </article>
       ))}

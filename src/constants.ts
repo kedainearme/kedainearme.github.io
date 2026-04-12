@@ -76,18 +76,21 @@ export const BLOG_POSTS = [
     id: 1,
     title: "Kedai Elektrik Wangsa Maju Dekat Anda Paling Lengkap",
     excerpt: "Mencari peralatan elektrik di Wangsa Maju? Berikut adalah senarai kedai elektrik paling lengkap dan dipercayai untuk keperluan rumah anda.",
-    date: "Apr 10, 2024"
+    date: "Apr 10, 2024",
+    url: "https://infokedai.com/kedai-elektrik-wangsa-maju/"
   },
   {
     id: 2,
     title: "Kedai Tayar 24 Jam Terbaik di Cheras Kuala Lumpur",
     excerpt: "Kecemasan tayar pancit di tengah malam? Jangan risau, ini adalah senarai kedai tayar 24 jam terbaik di sekitar Cheras dan KL.",
-    date: "Apr 08, 2024"
+    date: "Apr 08, 2024",
+    url: "https://infokedai.com/kedai-tayar-24-jam-cheras/"
   },
   {
     id: 3,
     title: "10 Kedai Perabot Kluang Paling Disyorkan & Murah",
     excerpt: "Ingin menghias rumah dengan bajet terhad? Semak 10 kedai perabot di Kluang yang menawarkan harga murah dan kualiti terbaik.",
-    date: "Apr 05, 2024"
+    date: "Apr 05, 2024",
+    url: "https://infokedai.com/kedai-perabot-kluang/"
   }
 ];
