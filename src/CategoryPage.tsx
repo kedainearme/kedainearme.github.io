@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send } from 'lucide-react';
+import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation } from 'lucide-react';
 import { CATEGORIES } from './constants';
 import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
@@ -157,6 +157,7 @@ export const CategoryPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [showOnlyOpen, setShowOnlyOpen] = useState(false);
+  const [sortByDistance, setSortByDistance] = useState(false);
   const [copiedStoreId, setCopiedStoreId] = useState<number | null>(null);
   const [activeReviewStore, setActiveReviewStore] = useState<string | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -308,6 +309,14 @@ export const CategoryPage = () => {
     ? visibleStores.filter(store => store.status === 'Open Now')
     : visibleStores;
 
+  const sortedAndFilteredStores = sortByDistance 
+    ? [...filteredStores].sort((a, b) => {
+        const distA = parseFloat(a.distance.split(' ')[0]);
+        const distB = parseFloat(b.distance.split(' ')[0]);
+        return distA - distB;
+      })
+    : filteredStores;
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link to="/" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 mb-6">
@@ -340,20 +349,33 @@ export const CategoryPage = () => {
       <div className="grid gap-4 mb-12">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-bold text-gray-900">{category.name} Pilihan Berdekatan</h2>
-          <button 
-            onClick={() => setShowOnlyOpen(!showOnlyOpen)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
-              showOnlyOpen 
-              ? 'bg-green-600 text-white shadow-lg shadow-green-100' 
-              : 'bg-white border border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-600'
-            }`}
-          >
-            <Clock className="h-4 w-4" />
-            Buka Sekarang
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setSortByDistance(!sortByDistance)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                sortByDistance 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                : 'bg-white border border-gray-200 text-gray-600 hover:border-blue-500 hover:text-blue-600'
+              }`}
+            >
+              <Navigation className="h-4 w-4" />
+              {sortByDistance ? 'Jarak Terdekat' : 'Isih Jarak'}
+            </button>
+            <button 
+              onClick={() => setShowOnlyOpen(!showOnlyOpen)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                showOnlyOpen 
+                ? 'bg-green-600 text-white shadow-lg shadow-green-100' 
+                : 'bg-white border border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-600'
+              }`}
+            >
+              <Clock className="h-4 w-4" />
+              Buka Sekarang
+            </button>
+          </div>
         </div>
 
-        {filteredStores.map((store, i) => (
+        {sortedAndFilteredStores.map((store, i) => (
           <div key={i} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div>
               <h3 className="font-bold text-lg text-gray-900">{store.name}</h3>

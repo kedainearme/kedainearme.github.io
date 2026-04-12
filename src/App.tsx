@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, Info, Shield, FileText, Menu, X } from 'lucide-react';
+import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram } from 'lucide-react';
 import { Home } from './Home';
 import { CategoryPage } from './CategoryPage';
 import { BLOG_POSTS } from './constants';
@@ -109,10 +109,33 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <h3 className="font-bold text-gray-900 mb-4">Hubungi</h3>
               <p className="text-sm text-gray-500 mb-4">Membantu jutaan orang mencari apa yang mereka perlukan dengan lebih pantas.</p>
               <div className="flex gap-4">
-                {/* Social placeholders */}
-                <div className="w-8 h-8 bg-gray-100 rounded-full"></div>
-                <div className="w-8 h-8 bg-gray-100 rounded-full"></div>
-                <div className="w-8 h-8 bg-gray-100 rounded-full"></div>
+                <a 
+                  href="https://facebook.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a 
+                  href="https://twitter.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-sky-50 text-sky-500 rounded-full flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all shadow-sm"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all shadow-sm"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
               </div>
             </div>
           </div>
