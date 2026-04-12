@@ -1,5 +1,5 @@
 {
-  "name": "Remix: NearMe - Store Finder",
+  "name": "NearMe - Store Finder",
   "description": "A fast, mobile-first tool to find nearby stores, restaurants, and services using Google Maps.",
   "requestFramePermissions": [
     "geolocation"
