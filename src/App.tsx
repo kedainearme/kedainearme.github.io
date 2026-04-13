@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot } from 'lucide-react';
 import { Home } from './Home';
 import { CategoryPage } from './CategoryPage';
