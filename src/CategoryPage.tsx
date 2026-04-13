@@ -87,7 +87,13 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   {review.userPhoto ? (
-                    <img src={review.userPhoto} alt={review.userName} className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
+                    <img 
+                      src={review.userPhoto} 
+                      alt={review.userName} 
+                      className="w-6 h-6 rounded-full" 
+                      referrerPolicy="no-referrer" 
+                      loading="lazy"
+                    />
                   ) : (
                     <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                       <User className="h-3 w-3 text-gray-400" />
@@ -492,10 +498,8 @@ export const CategoryPage = () => {
 
         {/* Weather Recommendation Banner */}
         {showWeatherRecommended && weather && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`mb-6 p-4 rounded-xl border flex items-start gap-3 ${
+          <div 
+            className={`mb-6 p-4 rounded-xl border flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${
               weather.isRaining 
               ? 'bg-blue-50 border-blue-100 text-blue-800' 
               : weather.temp > 32 
@@ -516,7 +520,7 @@ export const CategoryPage = () => {
                     : "Cuaca sangat baik! Semua lokasi sesuai untuk dikunjungi."}
               </p>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {sortedAndFilteredStores.map((store, i) => (

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot } from 'lucide-react';
-import { Home } from './Home';
-import { CategoryPage } from './CategoryPage';
-import { ContactPage } from './ContactPage';
-import { ChatBot } from './components/ChatBot';
+import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot, Loader2 } from 'lucide-react';
+
+// Lazy load components
+const Home = lazy(() => import('./Home').then(module => ({ default: module.Home })));
+const CategoryPage = lazy(() => import('./CategoryPage').then(module => ({ default: module.CategoryPage })));
+const ContactPage = lazy(() => import('./ContactPage').then(module => ({ default: module.ContactPage })));
+const ChatBot = lazy(() => import('./components/ChatBot').then(module => ({ default: module.ChatBot })));
 import { BLOG_POSTS } from './constants';
 
 // Layout Component
@@ -87,10 +89,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       <main className="flex-grow">
-        {children}
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          </div>
+        }>
+          {children}
+        </Suspense>
       </main>
 
-      <ChatBot />
+      <Suspense fallback={null}>
+        <ChatBot />
+      </Suspense>
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-100 py-12 mt-12">

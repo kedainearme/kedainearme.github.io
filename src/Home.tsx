@@ -91,7 +91,7 @@ export const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="mb-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="mb-16 grid grid-cols-2 md:grid-cols-4 gap-6 lazy-section">
         {[
           { icon: MapPin, label: 'Lokasi', value: '10,000+', color: 'text-blue-600' },
           { icon: Users, label: 'Pengguna Aktif', value: '500k+', color: 'text-green-600' },
@@ -109,7 +109,7 @@ export const Home = () => {
       </section>
 
       {/* Popular Searches */}
-      <section className="mb-16">
+      <section className="mb-16 lazy-section">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
           <Navigation className="h-6 w-6 text-blue-600" />
           Carian Popular Berdekatan Anda
@@ -130,7 +130,7 @@ export const Home = () => {
       </section>
 
       {/* City Links */}
-      <section className="mb-16 bg-blue-50 rounded-2xl p-8">
+      <section className="mb-16 bg-blue-50 rounded-2xl p-8 lazy-section">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <MapPin className="h-6 w-6 text-blue-600" />
@@ -216,7 +216,7 @@ export const Home = () => {
       </section>
 
       {/* Blog Teaser */}
-      <section className="mb-16">
+      <section className="mb-16 lazy-section">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Terbaru dari Blog Kami</h2>
         <div className="grid md:grid-cols-3 gap-6">
           {BLOG_POSTS.map((post) => (
@@ -238,7 +238,7 @@ export const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="mb-16">
+      <section className="mb-16 lazy-section">
         <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Apa Kata Pengguna Kami</h2>
         <div className="grid md:grid-cols-3 gap-6">
           {[
@@ -267,7 +267,7 @@ export const Home = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="mb-16 bg-gray-50 rounded-3xl p-8 md:p-12">
+      <section className="mb-16 bg-gray-50 rounded-3xl p-8 md:p-12 lazy-section">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center flex items-center justify-center gap-2">
             <HelpCircle className="h-6 w-6 text-blue-600" />

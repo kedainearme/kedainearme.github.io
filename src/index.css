@@ -7,14 +7,21 @@
 
 @layer base {
   body {
-    @apply font-sans bg-gray-50 text-gray-900;
+    @apply font-sans bg-white text-gray-900 antialiased;
+    text-rendering: optimizeLegibility;
   }
 }
 
 .google-shadow {
-  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .category-card {
-  @apply flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer;
+  @apply flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-500 hover:bg-blue-50/30 transition-colors cursor-pointer;
+}
+
+/* Performance: content-visibility for off-screen content */
+.lazy-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
 }
