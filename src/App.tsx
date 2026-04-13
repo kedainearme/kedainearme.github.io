@@ -4,6 +4,7 @@ import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Ins
 import { Home } from './Home';
 import { CategoryPage } from './CategoryPage';
 import { ContactPage } from './ContactPage';
+import { ChatBot } from './components/ChatBot';
 import { BLOG_POSTS } from './constants';
 
 // Layout Component
@@ -78,6 +79,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <main className="flex-grow">
         {children}
       </main>
+
+      <ChatBot />
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-100 py-12 mt-12">
