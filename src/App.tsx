@@ -156,7 +156,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
           </div>
           <div className="pt-8 border-t border-gray-100 text-center text-xs text-gray-400">
-            <p>© 2024 NearMe. Tidak bergabung dengan Google LLC. Semua tanda dagangan adalah milik pemilik masing-masing.</p>
+            <p>© 2026 NearMe. Partner of infokedai.com | Tidak bergabung dengan Google LLC. Semua tanda dagangan adalah milik pemilik masing-masing.</p>
           </div>
         </div>
       </footer>
