@@ -25,3 +25,24 @@
   content-visibility: auto;
   contain-intrinsic-size: 1px 500px;
 }
+
+/* Chatbot Markdown Styling */
+.markdown-content p {
+  @apply mb-2 last:mb-0;
+}
+
+.markdown-content ul, .markdown-content ol {
+  @apply mb-2 pl-4;
+}
+
+.markdown-content li {
+  @apply mb-1;
+}
+
+.markdown-content strong {
+  @apply font-bold text-gray-900;
+}
+
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+  @apply font-bold text-gray-900 mt-3 mb-1;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { MessageSquare, X, Send, Loader2, Bot, User, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import ReactMarkdown from 'react-markdown';
 import { CATEGORIES } from '../constants';
 
 let aiInstance: GoogleGenAI | null = null;
@@ -35,8 +36,11 @@ export const ChatBot = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const handleOpenChat = () => setIsOpen(true);
@@ -63,6 +67,12 @@ export const ChatBot = () => {
         ${categoriesList}
         
         Gaya bahasa: Ramah, membantu, dan profesional. Gunakan Bahasa Melayu.
+        
+        Format Jawapan:
+        - Gunakan **bold** untuk nama tempat atau kategori.
+        - Gunakan senarai (bullet points) untuk langkah-langkah atau pilihan.
+        - Pastikan jawapan kemas dan mudah dibaca.
+        
         Jika pengguna bertanya tentang lokasi spesifik, beritahu mereka bahawa mereka boleh menggunakan bar carian di halaman utama atau klik pada kategori yang berkaitan.
         Jangan berikan alamat palsu. Sentiasa galakkan pengguna menggunakan Google Maps melalui pautan yang kami sediakan.
       `;
@@ -139,7 +149,13 @@ export const ChatBot = () => {
                       ? 'bg-blue-600 text-white rounded-tr-none' 
                       : 'bg-white text-gray-700 border border-gray-100 rounded-tl-none shadow-sm'
                     }`}>
-                      {msg.text}
+                      {msg.role === 'bot' ? (
+                        <div className="markdown-content prose prose-sm max-w-none">
+                          <ReactMarkdown>{msg.text}</ReactMarkdown>
+                        </div>
+                      ) : (
+                        msg.text
+                      )}
                     </div>
                   </div>
                 </div>
