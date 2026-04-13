@@ -4,7 +4,17 @@ import { MessageSquare, X, Send, Loader2, Bot, User, MapPin } from 'lucide-react
 import { motion, AnimatePresence } from 'motion/react';
 import { CATEGORIES } from '../constants';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+const getAI = () => {
+  if (!aiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is missing. Please configure it in your environment.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+};
 
 interface Message {
   role: 'user' | 'bot';
@@ -57,6 +67,7 @@ export const ChatBot = () => {
         Jangan berikan alamat palsu. Sentiasa galakkan pengguna menggunakan Google Maps melalui pautan yang kami sediakan.
       `;
 
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [
