@@ -315,6 +315,34 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* SEO Footer Content */}
+      <section className="mb-16 prose prose-blue max-w-none text-gray-600 border-t border-gray-100 pt-12 lazy-section">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Direktori Carian Kedai & Perkhidmatan Terpantas di Malaysia</h2>
+        <p className="mb-4">
+          NearMe adalah platform carian lokal yang direka untuk membantu rakyat Malaysia mencari <strong>kedai berdekatan saya</strong> dengan hanya satu klik. 
+          Sama ada anda sedang mencari <strong>restoran terbaik</strong>, <strong>stesen minyak terdekat</strong>, atau <strong>farmasi 24 jam</strong>, 
+          NearMe menyediakan integrasi Google Maps yang lancar untuk arah jalan yang tepat.
+        </p>
+        <div className="grid md:grid-cols-2 gap-8 mt-8">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Kenapa Guna NearMe?</h3>
+            <ul className="list-disc pl-5 space-y-1 text-sm">
+              <li>Carian pantas berasaskan lokasi semasa anda.</li>
+              <li>Integrasi penuh dengan Google Maps untuk navigasi GPS.</li>
+              <li>Maklumat waktu operasi dan status kedai (Buka/Tutup).</li>
+              <li>Syor berasaskan cuaca untuk keselesaan perjalanan anda.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Kategori Popular</h3>
+            <p className="text-sm">
+              Kami merangkumi pelbagai kategori termasuk <strong>ATM</strong>, <strong>Hospital</strong>, <strong>Pusat Membeli-belah</strong>, 
+              dan banyak lagi. NearMe memastikan anda sentiasa menemui apa yang anda perlukan, di mana sahaja anda berada di Malaysia.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Ad Placeholder */}
       <div className="w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm border-2 border-dashed border-gray-200">
         Advertisement Placement

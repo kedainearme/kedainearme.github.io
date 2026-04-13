@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kedainearme.github.io/sitemap.xml
+Sitemap: https://ais-dev-srgnd4de73xc4tx3fr7zpz-382114081727.asia-southeast1.run.app/sitemap.xml
