@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot } from 'lucide-react';
 import { Home } from './Home';
 import { CategoryPage } from './CategoryPage';
 import { ContactPage } from './ContactPage';
@@ -64,6 +64,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link to="/about" className="text-lg font-medium text-gray-900">Tentang Kami</Link>
             <Link to="/blog" className="text-lg font-medium text-gray-900">Blog</Link>
             <Link to="/contact" className="text-lg font-medium text-gray-900">Hubungi Kami</Link>
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                window.dispatchEvent(new CustomEvent('open-chatbot'));
+              }}
+              className="text-lg font-medium text-blue-600 flex items-center gap-2"
+            >
+              <Bot className="h-5 w-5" />
+              Asisten AI
+            </button>
             <a 
               href="https://www.google.com/maps" 
               target="_blank" 
