@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation } from 'lucide-react';
+import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon } from 'lucide-react';
 import { CATEGORIES } from './constants';
 import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
@@ -287,6 +287,29 @@ export const CategoryPage = () => {
     }
   };
 
+  const handleSocialShare = (platform: 'facebook' | 'twitter' | 'whatsapp' | 'copy', storeName: string) => {
+    const shareUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeName)}`;
+    const shareText = `Check out ${storeName} on NearMe!`;
+    
+    let url = '';
+    switch (platform) {
+      case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'twitter':
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'whatsapp':
+        url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        alert('Link copied to clipboard!');
+        return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   if (!category) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12 text-center">
@@ -427,7 +450,7 @@ export const CategoryPage = () => {
                 {store.description}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button 
                 onClick={() => setActiveReviewStore(activeReviewStore === store.name ? null : store.name)}
                 className={`p-2 rounded-lg transition-all border flex items-center gap-2 ${
@@ -439,18 +462,39 @@ export const CategoryPage = () => {
               >
                 <MessageSquare className="h-5 w-5" />
               </button>
-              <button 
-                onClick={() => handleShare(store.id, store.name)}
-                className={`p-2 rounded-lg transition-all border flex items-center gap-2 ${
-                  copiedStoreId === store.id 
-                  ? 'bg-green-50 text-green-600 border-green-100' 
-                  : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50 border-transparent hover:border-blue-100'
-                }`}
-                title="Share this store"
-              >
-                <Share2 className="h-5 w-5" />
-                {copiedStoreId === store.id && <span className="text-xs font-bold">Copied!</span>}
-              </button>
+              
+              {/* Social Share Buttons */}
+              <div className="flex gap-1 bg-gray-50 p-1 rounded-lg border border-gray-100">
+                <button 
+                  onClick={() => handleSocialShare('facebook', store.name)}
+                  className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-md transition-colors"
+                  title="Share on Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </button>
+                <button 
+                  onClick={() => handleSocialShare('twitter', store.name)}
+                  className="p-1.5 text-sky-500 hover:bg-sky-100 rounded-md transition-colors"
+                  title="Share on Twitter"
+                >
+                  <Twitter className="h-4 w-4" />
+                </button>
+                <button 
+                  onClick={() => handleSocialShare('whatsapp', store.name)}
+                  className="p-1.5 text-green-600 hover:bg-green-100 rounded-md transition-colors"
+                  title="Share on WhatsApp"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                </button>
+                <button 
+                  onClick={() => handleSocialShare('copy', store.name)}
+                  className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-md transition-colors"
+                  title="Copy Link"
+                >
+                  <LinkIcon className="h-4 w-4" />
+                </button>
+              </div>
+
               <a 
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.name)}`}
                 target="_blank"
