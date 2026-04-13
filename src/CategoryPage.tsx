@@ -261,8 +261,6 @@ export const CategoryPage = () => {
           distance: `${(Math.random() * 5).toFixed(1)} miles`,
           status: Math.random() > 0.2 ? 'Open Now' : 'Closing Soon',
           openingHours: index % 2 === 0 ? 'Isnin-Ahad: 8:00 AM - 10:00 PM' : 'Isnin-Jumaat: 9:00 AM - 6:00 PM',
-          phone: `+60 3-${Math.floor(1000 + Math.random() * 9000)} ${Math.floor(1000 + Math.random() * 9000)}`,
-          website: `https://www.${category.id.replace(/-/g, '')}${index + 1}.com.my`,
           description: descriptions[category.id] || `Temukan layanan ${category.name.toLowerCase()} terbaik di lokasi ini.`
         };
       });
@@ -547,25 +545,6 @@ export const CategoryPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center mt-2 gap-4 text-xs">
-                <a 
-                  href={`tel:${store.phone.replace(/\s/g, '')}`} 
-                  className="flex items-center text-blue-600 hover:underline font-medium"
-                >
-                  <Phone className="h-3 w-3 mr-1" />
-                  {store.phone}
-                </a>
-                <a 
-                  href={store.website} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex items-center text-blue-600 hover:underline font-medium"
-                >
-                  <Globe className="h-3 w-3 mr-1" />
-                  Laman Web
-                </a>
-              </div>
-              
               {/* Category Description */}
               <div className="mt-4 text-sm text-gray-600 border-t border-gray-50 pt-4 italic leading-relaxed">
                 {store.description}
