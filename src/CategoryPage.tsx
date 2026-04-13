@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon, CloudRain, Sun, Cloud, Thermometer, Wind } from 'lucide-react';
+import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon, CloudRain, Sun, Cloud, Thermometer, Wind, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CATEGORIES } from './constants';
 import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
@@ -414,6 +414,32 @@ export const CategoryPage = () => {
     return 0;
   });
 
+  const StoreSkeleton = () => (
+    <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-pulse">
+      <div className="flex-1">
+        <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="flex items-center gap-3 mt-1">
+          <div className="h-4 bg-gray-200 rounded w-16"></div>
+          <div className="h-4 bg-gray-200 rounded w-24"></div>
+          <div className="h-4 bg-gray-200 rounded w-20"></div>
+        </div>
+        <div className="flex gap-3 mt-3">
+          <div className="h-3 bg-gray-100 rounded w-20"></div>
+          <div className="h-3 bg-gray-100 rounded w-28"></div>
+        </div>
+        <div className="mt-4 border-t border-gray-50 pt-4">
+          <div className="h-3 bg-gray-50 rounded w-full mb-2"></div>
+          <div className="h-3 bg-gray-50 rounded w-5/6"></div>
+        </div>
+      </div>
+      <div className="flex gap-2">
+        <div className="h-10 w-10 bg-gray-100 rounded-lg"></div>
+        <div className="h-10 w-24 bg-gray-100 rounded-lg"></div>
+        <div className="h-10 w-24 bg-gray-100 rounded-lg"></div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link to="/" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 mb-6">
@@ -624,23 +650,43 @@ export const CategoryPage = () => {
           </div>
         ))}
 
+        {/* Skeleton Loaders during initial or infinite load */}
+        {isLoading && (
+          <div className="space-y-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <StoreSkeleton key={`skeleton-${i}`} />
+            ))}
+          </div>
+        )}
+
         {/* Loader Target */}
-        <div ref={loaderRef} className="py-8 flex flex-col items-center justify-center gap-4">
-          {isLoading && (
-            <div className="flex items-center gap-2 text-gray-500 font-medium">
-              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-              Loading more locations...
+        <div ref={loaderRef} className="py-12 flex flex-col items-center justify-center gap-4">
+          {!isLoading && showOnlyOpen && filteredStores.length === 0 && hasMore && (
+            <div className="text-center p-8 bg-gray-50 rounded-2xl border border-dashed border-gray-200 w-full">
+              <Clock className="h-8 w-8 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm">Tiada lokasi yang dibuka ditemui dalam kumpulan ini.</p>
+              <p className="text-xs text-gray-400 mt-1">Tatal ke bawah untuk mencari lebih banyak lokasi.</p>
             </div>
           )}
-          {!isLoading && showOnlyOpen && filteredStores.length === 0 && hasMore && (
-            <p className="text-gray-500 text-sm">Tiada lokasi yang dibuka ditemui dalam kumpulan ini. Tatal untuk lebih lanjut...</p>
-          )}
+          
           {!hasMore && (
-            <p className="text-gray-400 text-sm italic">
-              {filteredStores.length === 0 && showOnlyOpen 
-                ? "Tiada lokasi yang dibuka ditemui berdekatan." 
-                : "Anda telah sampai ke penghujung senarai."}
-            </p>
+            <div className="text-center p-8 w-full">
+              <div className="inline-flex p-3 bg-gray-50 rounded-full mb-3">
+                <CheckCircle className="h-6 w-6 text-green-500" />
+              </div>
+              <p className="text-gray-900 font-bold">Anda telah sampai ke penghujung senarai</p>
+              <p className="text-gray-500 text-sm mt-1">
+                {filteredStores.length === 0 && showOnlyOpen 
+                  ? "Tiada lokasi yang dibuka ditemui berdekatan anda buat masa ini." 
+                  : `Kami telah memaparkan semua ${category.name.toLowerCase()} terbaik di kawasan anda.`}
+              </p>
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="mt-6 text-blue-600 font-bold text-sm hover:underline"
+              >
+                Kembali ke Atas
+              </button>
+            </div>
           )}
         </div>
       </div>
