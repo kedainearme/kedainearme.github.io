@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon } from 'lucide-react';
+import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon, CloudRain, Sun, Cloud, Thermometer, Wind } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { CATEGORIES } from './constants';
 import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
@@ -157,6 +158,8 @@ export const CategoryPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [showOnlyOpen, setShowOnlyOpen] = useState(false);
+  const [showWeatherRecommended, setShowWeatherRecommended] = useState(false);
+  const [weather, setWeather] = useState<{ temp: number, condition: string, isRaining: boolean } | null>(null);
   const [sortBy, setSortBy] = useState<'none' | 'distance' | 'rating'>('none');
   const [copiedStoreId, setCopiedStoreId] = useState<number | null>(null);
   const [activeReviewStore, setActiveReviewStore] = useState<string | null>(null);
@@ -177,6 +180,37 @@ export const CategoryPage = () => {
     setPage(1);
     setHasMore(true);
   }, [categoryId]);
+
+  useEffect(() => {
+    const fetchWeather = async (lat: number, lon: number) => {
+      try {
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await response.json();
+        const code = data.current_weather.weathercode;
+        // WMO Weather interpretation codes (0-99)
+        const rainCodes = [51, 53, 55, 61, 63, 65, 80, 81, 82, 95, 96, 99];
+        setWeather({
+          temp: data.current_weather.temperature,
+          condition: code <= 3 ? 'Cerah' : rainCodes.includes(code) ? 'Hujan' : 'Berawan',
+          isRaining: rainCodes.includes(code)
+        });
+      } catch (error) {
+        console.error("Error fetching weather:", error);
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => fetchWeather(position.coords.latitude, position.coords.longitude),
+        () => {
+          console.log("Geolocation denied, using default location (KL)");
+          fetchWeather(3.139, 101.6869); // Kuala Lumpur coordinates
+        }
+      );
+    } else {
+      fetchWeather(3.139, 101.6869); // Fallback for no geolocation support
+    }
+  }, []);
 
   const loadMoreStores = () => {
     if (isLoading || !hasMore || !category) return;
@@ -226,6 +260,9 @@ export const CategoryPage = () => {
           reviews: Math.floor(Math.random() * 2000) + 100,
           distance: `${(Math.random() * 5).toFixed(1)} miles`,
           status: Math.random() > 0.2 ? 'Open Now' : 'Closing Soon',
+          openingHours: index % 2 === 0 ? 'Isnin-Ahad: 8:00 AM - 10:00 PM' : 'Isnin-Jumaat: 9:00 AM - 6:00 PM',
+          phone: `+60 3-${Math.floor(1000 + Math.random() * 9000)} ${Math.floor(1000 + Math.random() * 9000)}`,
+          website: `https://www.${category.id.replace(/-/g, '')}${index + 1}.com.my`,
           description: descriptions[category.id] || `Temukan layanan ${category.name.toLowerCase()} terbaik di lokasi ini.`
         };
       });
@@ -344,7 +381,24 @@ export const CategoryPage = () => {
     ? visibleStores.filter(store => store.status === 'Open Now')
     : visibleStores;
 
-  const sortedAndFilteredStores = [...filteredStores].sort((a, b) => {
+  const weatherFilteredStores = showWeatherRecommended && weather
+    ? filteredStores.filter(store => {
+        const indoorCategories = ['shopping-malls', 'electronics', 'gadgets', 'clothing', 'entertainment', 'restaurants', 'coffee-shops', 'grocery-stores', 'pharmacies', 'atms', 'hospitals', 'hotels', 'campuses', 'government', 'services'];
+        const outdoorCategories = ['parks', 'places-of-worship', 'flowers', 'vegetables', 'fruits', 'building-materials', 'gas-stations', 'car-repair'];
+        
+        if (weather.isRaining) {
+          // If raining, prefer indoor
+          return indoorCategories.includes(category.id);
+        } else if (weather.temp > 32) {
+          // If very hot, prefer indoor (AC)
+          return indoorCategories.includes(category.id);
+        }
+        // If nice weather, everything is fine
+        return true;
+      })
+    : filteredStores;
+
+  const sortedAndFilteredStores = [...weatherFilteredStores].sort((a, b) => {
     if (sortBy === 'distance') {
       const distA = parseFloat(a.distance.split(' ')[0]);
       const distB = parseFloat(b.distance.split(' ')[0]);
@@ -422,8 +476,50 @@ export const CategoryPage = () => {
               <Clock className="h-4 w-4" />
               Buka Sekarang
             </button>
+            {weather && (
+              <button 
+                onClick={() => setShowWeatherRecommended(!showWeatherRecommended)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  showWeatherRecommended 
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' 
+                  : 'bg-white border border-gray-200 text-gray-600 hover:border-indigo-500 hover:text-indigo-600'
+                }`}
+              >
+                {weather.isRaining ? <CloudRain className="h-4 w-4" /> : weather.temp > 30 ? <Thermometer className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                Sesuai Cuaca ({weather.temp}°C)
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Weather Recommendation Banner */}
+        {showWeatherRecommended && weather && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mb-6 p-4 rounded-xl border flex items-start gap-3 ${
+              weather.isRaining 
+              ? 'bg-blue-50 border-blue-100 text-blue-800' 
+              : weather.temp > 32 
+                ? 'bg-orange-50 border-orange-100 text-orange-800'
+                : 'bg-green-50 border-green-100 text-green-800'
+            }`}
+          >
+            <div className="p-2 bg-white rounded-lg shadow-sm">
+              {weather.isRaining ? <CloudRain className="h-5 w-5 text-blue-600" /> : weather.temp > 32 ? <Thermometer className="h-5 w-5 text-orange-600" /> : <Sun className="h-5 w-5 text-green-600" />}
+            </div>
+            <div>
+              <p className="font-bold text-sm">Syor Berasaskan Cuaca Aktif</p>
+              <p className="text-xs opacity-90 mt-0.5">
+                {weather.isRaining 
+                  ? "Hari sedang hujan. Kami mengesyorkan lokasi dalam bangunan (indoor) untuk keselesaan anda." 
+                  : weather.temp > 32 
+                    ? `Suhu agak panas (${weather.temp}°C). Kami mengesyorkan lokasi berhawa dingin.`
+                    : "Cuaca sangat baik! Semua lokasi sesuai untuk dikunjungi."}
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {sortedAndFilteredStores.map((store, i) => (
           <div key={i} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -440,9 +536,34 @@ export const CategoryPage = () => {
                   {store.distance}
                 </span>
               </div>
-              <div className="flex items-center mt-2 text-xs font-semibold text-green-600">
-                <Clock className="h-3 w-3 mr-1" />
-                {store.status}
+              <div className="flex flex-wrap items-center mt-2 gap-3">
+                <div className="flex items-center text-xs font-semibold text-green-600">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {store.status}
+                </div>
+                <div className="flex items-center text-xs text-gray-500">
+                  <Clock className="h-3 w-3 mr-1 text-gray-400" />
+                  {store.openingHours}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center mt-2 gap-4 text-xs">
+                <a 
+                  href={`tel:${store.phone.replace(/\s/g, '')}`} 
+                  className="flex items-center text-blue-600 hover:underline font-medium"
+                >
+                  <Phone className="h-3 w-3 mr-1" />
+                  {store.phone}
+                </a>
+                <a 
+                  href={store.website} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center text-blue-600 hover:underline font-medium"
+                >
+                  <Globe className="h-3 w-3 mr-1" />
+                  Laman Web
+                </a>
               </div>
               
               {/* Category Description */}
