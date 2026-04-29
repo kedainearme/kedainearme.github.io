@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Navigation, Locate, Loader2, ExternalLink, Users, CheckCircle, TrendingUp, HelpCircle, Mail, Star, Quote } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { CATEGORIES, POPULAR_SEARCHES, CITIES, BLOG_POSTS } from './constants';
 
 export const Home = () => {
@@ -8,6 +9,7 @@ export const Home = () => {
   const [detectedCity, setDetectedCity] = React.useState<string | null>(null);
   const [isDetecting, setIsDetecting] = React.useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const detectLocation = () => {
     setIsDetecting(true);
@@ -46,45 +48,45 @@ export const Home = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Hero Section */}
       <section className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-          Cari Kedai Berdekatan Anda Dalam Beberapa Saat
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          {t('hero_title')}
         </h1>
-        <p className="text-lg text-gray-600 mb-8">
-          Cari perniagaan berdekatan dan dapatkan arah dengan pantas.
+        <p className="text-lg text-gray-600 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          {t('hero_subtitle')}
         </p>
 
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto mb-12">
+        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
           <div className="relative flex items-center">
             <Search className="absolute left-4 text-gray-400 h-5 w-5" />
             <input
               type="text"
-              placeholder="Cari kedai atau kategori..."
-              className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent google-shadow"
+              placeholder={t('search_placeholder')}
+              className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent google-shadow transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button 
               type="submit"
-              className="absolute right-2 bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors"
+              className="absolute right-2 bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
             >
-              Cari
+              {t('search_btn')}
             </button>
           </div>
         </form>
 
         {/* Quick Categories */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
           {CATEGORIES.map((cat) => (
             <Link 
               key={cat.id} 
               to={`/${cat.id}-near-me`}
               className="category-card"
             >
-              <div className={`p-3 rounded-full ${cat.color} mb-3`}>
+              <div className={`p-3 rounded-full ${cat.color} mb-3 group-hover:scale-110 transition-transform`}>
                 <cat.icon className="h-6 w-6" />
               </div>
-              <span className="text-sm font-medium text-gray-700">{cat.name}</span>
+              <span className="text-sm font-medium text-gray-700">{t(cat.id)}</span>
             </Link>
           ))}
         </div>

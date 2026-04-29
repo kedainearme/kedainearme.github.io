@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot, Loader2 } from 'lucide-react';
+import { Search, MapPin, Info, Shield, FileText, Menu, X, Facebook, Twitter, Instagram, Bot, Loader2, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 // Lazy load components
 const Home = lazy(() => import('./Home').then(module => ({ default: module.Home })));
@@ -13,6 +15,7 @@ import { BLOG_POSTS } from './constants';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,11 +23,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-sans">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
             <div className="bg-blue-600 p-1.5 rounded-lg">
               <MapPin className="h-5 w-5 text-white" />
             </div>
@@ -32,40 +35,44 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm font-medium text-gray-600 hover:text-blue-600">Utama</Link>
-            <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-blue-600">Tentang Kami</Link>
-            <Link to="/blog" className="text-sm font-medium text-gray-600 hover:text-blue-600">Blog</Link>
-            <Link to="/contact" className="text-sm font-medium text-gray-600 hover:text-blue-600">Hubungi</Link>
+          <nav className="hidden lg:flex items-center gap-8">
+            <Link to="/" className="text-sm font-medium text-gray-600 hover:text-blue-600">{t('nav_home')}</Link>
+            <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-blue-600">{t('nav_about')}</Link>
+            <Link to="/blog" className="text-sm font-medium text-gray-600 hover:text-blue-600">{t('nav_blog')}</Link>
+            <Link to="/contact" className="text-sm font-medium text-gray-600 hover:text-blue-600">{t('nav_contact')}</Link>
           </nav>
 
-          <div className="hidden md:block">
-            <a 
-              href="https://www.google.com/maps" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-gray-900 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors"
-            >
-              Buka Peta
-            </a>
-          </div>
+          <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+            <LanguageSwitcher />
+            
+            <div className="hidden md:block">
+              <a 
+                href="https://www.google.com/maps" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-gray-900 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors"
+              >
+                {t('nav_map')}
+              </a>
+            </div>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="md:hidden p-2 text-gray-600"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </button>
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="lg:hidden p-2 text-gray-600"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Nav */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-b border-gray-100 py-4 px-4 flex flex-col gap-4">
-            <Link to="/" className="text-lg font-medium text-gray-900">Utama</Link>
-            <Link to="/about" className="text-lg font-medium text-gray-900">Tentang Kami</Link>
-            <Link to="/blog" className="text-lg font-medium text-gray-900">Blog</Link>
-            <Link to="/contact" className="text-lg font-medium text-gray-900">Hubungi Kami</Link>
+          <div className="lg:hidden bg-white border-b border-gray-100 py-4 px-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+            <Link to="/" className="text-lg font-medium text-gray-900">{t('nav_home')}</Link>
+            <Link to="/about" className="text-lg font-medium text-gray-900">{t('nav_about')}</Link>
+            <Link to="/blog" className="text-lg font-medium text-gray-900">{t('nav_blog')}</Link>
+            <Link to="/contact" className="text-lg font-medium text-gray-900">{t('nav_contact')}</Link>
             <button 
               onClick={() => {
                 setIsMenuOpen(false);
@@ -74,7 +81,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               className="text-lg font-medium text-blue-600 flex items-center gap-2"
             >
               <Bot className="h-5 w-5" />
-              Asisten AI
+              {t('nav_ai')}
             </button>
             <a 
               href="https://www.google.com/maps" 
@@ -82,7 +89,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               rel="noopener noreferrer"
               className="bg-blue-600 text-white px-5 py-3 rounded-xl text-center font-bold"
             >
-              Buka Google Maps
+              {t('nav_map')}
             </a>
           </div>
         )}
@@ -105,34 +112,34 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-100 py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Pautan Pantas</h3>
+              <h3 className="font-bold text-gray-900 mb-4">{t('footer_quick')}</h3>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link to="/restaurants-near-me" className="hover:text-blue-600">Restoran Berdekatan</Link></li>
-                <li><Link to="/gas-stations-near-me" className="hover:text-blue-600">SPBU Berdekatan</Link></li>
-                <li><Link to="/pharmacies-near-me" className="hover:text-blue-600">Farmasi Berdekatan</Link></li>
-                <li><Link to="/grocery-stores-near-me" className="hover:text-blue-600">Kedai Runcit Berdekatan</Link></li>
+                <li><Link to="/restaurants-near-me" className="hover:text-blue-600">{t('restaurants')}</Link></li>
+                <li><Link to="/gas-stations-near-me" className="hover:text-blue-600">{t('gas_stations')}</Link></li>
+                <li><Link to="/pharmacies-near-me" className="hover:text-blue-600">{t('pharmacies')}</Link></li>
+                <li><Link to="/grocery-stores-near-me" className="hover:text-blue-600">{t('grocery_stores')}</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Syarikat</h3>
+              <h3 className="font-bold text-gray-900 mb-4">{t('footer_company')}</h3>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link to="/about" className="hover:text-blue-600">Tentang Kami</Link></li>
-                <li><Link to="/blog" className="hover:text-blue-600">Blog</Link></li>
-                <li><Link to="/contact" className="hover:text-blue-600">Hubungi Kami</Link></li>
+                <li><Link to="/about" className="hover:text-blue-600">{t('nav_about')}</Link></li>
+                <li><Link to="/blog" className="hover:text-blue-600">{t('nav_blog')}</Link></li>
+                <li><Link to="/contact" className="hover:text-blue-600">{t('nav_contact')}</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Legal</h3>
+              <h3 className="font-bold text-gray-900 mb-4">{t('footer_legal')}</h3>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link to="/privacy" className="hover:text-blue-600">Dasar Privasi</Link></li>
-                <li><Link to="/terms" className="hover:text-blue-600">Syarat Perkhidmatan</Link></li>
-                <li><Link to="/disclaimer" className="hover:text-blue-600">Penafian</Link></li>
+                <li><Link to="/privacy" className="hover:text-blue-600">{t('nav_privacy')}</Link></li>
+                <li><Link to="/terms" className="hover:text-blue-600">{t('nav_terms')}</Link></li>
+                <li><Link to="/disclaimer" className="hover:text-blue-600">{t('nav_disclaimer')}</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Hubungi</h3>
+              <h3 className="font-bold text-gray-900 mb-4">{t('nav_contact')}</h3>
               <p className="text-sm text-gray-500 mb-4">Membantu jutaan orang mencari apa yang mereka perlukan dengan lebih pantas.</p>
               <div className="flex gap-4">
                 <a 

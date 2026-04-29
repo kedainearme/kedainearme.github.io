@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, ExternalLink, ArrowLeft, Clock, Star, Loader2, Share2, Phone, Globe, MessageSquare, User, Send, Navigation, Facebook, Twitter, MessageCircle, Link as LinkIcon, CloudRain, Sun, Cloud, Thermometer, Wind, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { CATEGORIES } from './constants';
 import { auth, db, signInWithGoogle, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from './firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
@@ -158,6 +159,7 @@ const ReviewSection = ({ storeId, storeName }: { storeId: string, storeName: str
 export const CategoryPage = () => {
   const { categoryId } = useParams();
   const category = CATEGORIES.find(c => `${c.id}-near-me` === categoryId || c.id === categoryId);
+  const { t } = useTranslation();
   
   const [visibleStores, setVisibleStores] = useState<any[]>([]);
   const [page, setPage] = useState(1);
@@ -444,12 +446,12 @@ export const CategoryPage = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link to="/" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 mb-6">
         <ArrowLeft className="h-4 w-4 mr-1" />
-        Kembali ke Carian
+        {t('back_to_search')}
       </Link>
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          {category.name} Terbaik Berdekatan Anda
+          {t(category.id)} Terbaik Berdekatan Anda
         </h1>
         <p className="text-gray-600 leading-relaxed">
           Mencari {category.name.toLowerCase()} yang terdekat? Kami telah menyusun senarai lokasi dengan rating tertinggi berdekatan anda. 
@@ -471,7 +473,7 @@ export const CategoryPage = () => {
 
       <div className="grid gap-4 mb-12">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl font-bold text-gray-900">{category.name} Pilihan Berdekatan</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t(category.id)} Pilihan Berdekatan</h2>
           <div className="flex flex-wrap gap-2">
             <button 
               onClick={() => setSortBy(sortBy === 'distance' ? 'none' : 'distance')}
@@ -537,13 +539,13 @@ export const CategoryPage = () => {
               {weather.isRaining ? <CloudRain className="h-5 w-5 text-blue-600" /> : weather.temp > 32 ? <Thermometer className="h-5 w-5 text-orange-600" /> : <Sun className="h-5 w-5 text-green-600" />}
             </div>
             <div>
-              <p className="font-bold text-sm">Syor Berasaskan Cuaca Aktif</p>
+              <p className="font-bold text-sm">{t('weather_syor')}</p>
               <p className="text-xs opacity-90 mt-0.5">
                 {weather.isRaining 
-                  ? "Hari sedang hujan. Kami mengesyorkan lokasi dalam bangunan (indoor) untuk keselesaan anda." 
+                  ? t('weather_rain')
                   : weather.temp > 32 
-                    ? `Suhu agak panas (${weather.temp}°C). Kami mengesyorkan lokasi berhawa dingin.`
-                    : "Cuaca sangat baik! Semua lokasi sesuai untuk dikunjungi."}
+                    ? t('weather_hot', { temp: weather.temp })
+                    : t('weather_nice')}
               </p>
             </div>
           </div>
@@ -674,17 +676,17 @@ export const CategoryPage = () => {
               <div className="inline-flex p-3 bg-gray-50 rounded-full mb-3">
                 <CheckCircle className="h-6 w-6 text-green-500" />
               </div>
-              <p className="text-gray-900 font-bold">Anda telah sampai ke penghujung senarai</p>
+              <p className="text-gray-900 font-bold">{t('end_of_list')}</p>
               <p className="text-gray-500 text-sm mt-1">
                 {filteredStores.length === 0 && showOnlyOpen 
                   ? "Tiada lokasi yang dibuka ditemui berdekatan anda buat masa ini." 
-                  : `Kami telah memaparkan semua ${category.name.toLowerCase()} terbaik di kawasan anda.`}
+                  : `Kami telah memaparkan semua ${t(category.id).toLowerCase()} terbaik di kawasan anda.`}
               </p>
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="mt-6 text-blue-600 font-bold text-sm hover:underline"
               >
-                Kembali ke Atas
+                {t('back_to_top')}
               </button>
             </div>
           )}

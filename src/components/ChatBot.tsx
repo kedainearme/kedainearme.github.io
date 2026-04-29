@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { MessageSquare, X, Send, Loader2, Bot, User, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
+import { useTranslation } from 'react-i18next';
 import { CATEGORIES } from '../constants';
 
 let aiInstance: GoogleGenAI | null = null;
@@ -24,12 +25,26 @@ interface Message {
 
 export const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t, i18n } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', text: 'Hai! Saya asisten AI NearMe. Ada apa-apa yang boleh saya bantu cari hari ini?' }
+    { role: 'bot', text: t('nav_ai') + '! I am your AI assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Update initial message when language changes
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].role === 'bot') {
+      const welcomeMessages: Record<string, string> = {
+        en: 'Hi! I am NearMe AI Assistant. How can I help you find something today?',
+        ms: 'Hai! Saya asisten AI NearMe. Ada apa-apa yang boleh saya bantu cari hari ini?',
+        id: 'Hai! Saya asisten AI NearMe. Ada yang bisa saya bantu cari hari ini?',
+        zh: '嗨！我是 NearMe AI 助手。今天有什么我可以帮您找的吗？'
+      };
+      setMessages([{ role: 'bot', text: welcomeMessages[i18n.language] || welcomeMessages.en }]);
+    }
+  }, [i18n.language]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,21 +75,24 @@ export const ChatBot = () => {
     try {
       const categoriesList = CATEGORIES.map(c => `- ${c.name} (ID: ${c.id})`).join('\n');
       const systemInstruction = `
-        Anda adalah asisten AI untuk website "NearMe", sebuah direktori pencarian lokasi di Malaysia.
-        Tugas anda adalah membantu pengguna mencari kategori atau tempat yang mereka perlukan.
+        You are an AI assistant for "NearMe", a directory website in Malaysia.
+        Your goal is to help users find categories or places they need.
         
-        Kategori yang tersedia di NearMe:
+        Current Language: ${i18n.language}
+        Response Language: Always respond in the language the user is speaking, preference given to ${i18n.language}.
+        
+        Available Categories:
         ${categoriesList}
         
-        Gaya bahasa: Ramah, membantu, dan profesional. Gunakan Bahasa Melayu.
+        Style: Friendly, helpful, professional.
         
-        Format Jawapan:
-        - Gunakan **bold** untuk nama tempat atau kategori.
-        - Gunakan senarai (bullet points) untuk langkah-langkah atau pilihan.
-        - Pastikan jawapan kemas dan mudah dibaca.
+        Response Format:
+        - Use **bold** for place or category names.
+        - Use bullet points for steps or options.
+        - Ensure response is clean and easy to read.
         
-        Jika pengguna bertanya tentang lokasi spesifik, beritahu mereka bahawa mereka boleh menggunakan bar carian di halaman utama atau klik pada kategori yang berkaitan.
-        Jangan berikan alamat palsu. Sentiasa galakkan pengguna menggunakan Google Maps melalui pautan yang kami sediakan.
+        If asked for specific locations, tell them they can use the search bar on the home page or click relevant categories.
+        Never provide fake addresses. Always encourage using Google Maps via our links.
       `;
 
       const ai = getAI();
